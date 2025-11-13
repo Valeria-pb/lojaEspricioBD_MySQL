@@ -1,4 +1,4 @@
-// src/model/clienteModel.js
+
 const conexao = require('./Conexao'); // Importa o pool de conexão MySQL
 
 const clienteModel = {
@@ -34,17 +34,15 @@ const clienteModel = {
         }
     },
     
-    /**
-     * Função bônus para o DESAFIO (Tarefa 3)
-     * Busca um cliente pelo CPF
-     */
+    // Busca um cliente pelo CPF
+     
     buscarPorCpf: async (cpf) => {
         try {
-            const sql = "SELECT * FROM cliente WHERE cpfCliente = ?";
+            const sql =  `SELECT * FROM cliente WHERE cpfCliente = ${cpf}`;
             // [cpf] é um array com os valores para os '?'
             const [rows] = await conexao.query(sql, [cpf]);
             return rows; // Retorna uma lista (vazia ou com 1 cliente)
-        } catch (error) { // <-- A CORREÇÃO ESTÁ AQUI
+        } catch (error) { 
             console.error("Erro no model ao buscar por CPF:", error);
             throw error;
         }

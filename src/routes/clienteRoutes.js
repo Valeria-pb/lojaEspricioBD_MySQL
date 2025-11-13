@@ -1,8 +1,7 @@
-// src/routes/clienteRoutes.js
 const express = require('express');
 const router = express.Router();
 
-// Importa o controller (certifique-se que o nome da pasta está certo)
+// Importa o controller 
 const clienteController = require('../controller/clienteController');
 
 // Define as rotas

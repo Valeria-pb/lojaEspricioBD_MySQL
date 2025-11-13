@@ -1,7 +1,6 @@
-// app.js (na raiz do projeto)
 const express = require('express');
 const app = express();
-const port = 3000; // Você pode escolher a porta
+const port = 3000; 
 
 // --- Configurações Essenciais ---
 // 1. Diz ao Express para entender requisições com corpo em JSON
@@ -23,5 +22,5 @@ app.use('/api', clienteRoutes);
 // 4. "Liga" o servidor na porta definida
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
-    console.log("Pressione CTRL+C para parar o servidor.");
+    
 });

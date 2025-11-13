@@ -1,4 +1,3 @@
-// src/controller/clienteController.js
 const clienteModel = require('../model/clienteModel'); // Importa o Model
 
 const clienteController = {
@@ -16,13 +15,12 @@ const clienteController = {
     },
 
     /**
-     * Cria um novo cliente (POST) - COM O DESAFIO
+     * Cria um novo cliente (POST) 
      */
     criarCliente: async (req, res) => {
         try {
             const { nomeCliente, cpfCliente } = req.body;
 
-            // ---- INÍCIO DO DESAFIO (TAREFA 3) ----
             // 1. Verifica se o CPF já existe
             const clienteExistente = await clienteModel.buscarPorCpf(cpfCliente);
             
@@ -30,7 +28,7 @@ const clienteController = {
                 // 2. Se existe, retorna status 409 (Conflito)
                 return res.status(409).json({ erro: "CPF já cadastrado." });
             }
-            // ---- FIM DO DESAFIO ----
+            
 
             // 3. Se não existe, prossegue com a criação
             const novoCliente = { nomeCliente, cpfCliente };
