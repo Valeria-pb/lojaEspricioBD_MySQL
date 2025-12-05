@@ -1,5 +1,5 @@
 
-const conexao = require('./Conexao'); // Importa o pool de conexão MySQL
+const { getConnection } = require('../config/db'); // Importação correta da função
 
 const clienteModel = {
     /**
@@ -7,12 +7,12 @@ const clienteModel = {
      */
     buscarTodos: async () => {
         try {
-            // Usa o pool de conexão para fazer a query
-            const [rows] = await conexao.query("SELECT * FROM cliente");
+            const pool = await getConnection();
+            const [rows] = await pool.query("SELECT * FROM cliente");
             return rows;
         } catch (error) {
             console.error("Erro no model ao buscar clientes:", error);
-            throw error; // Joga o erro para o controller tratar
+            throw error;
         }
     },
 
@@ -21,27 +21,31 @@ const clienteModel = {
      */
     criarCliente: async (cliente) => {
         try {
-            const { nomeCliente, cpfCliente } = cliente;
-            const sql = "INSERT INTO cliente (nomeCliente, cpfCliente) VALUES (?, ?)";
-            const values = [nomeCliente, cpfCliente];
+            const pool = await getConnection();
+            const { nomeCliente, cpfCliente, emailCliente, senhaCliente } = cliente;
             
-            // Executa a query
-            const [result] = await conexao.query(sql, values);
-            return result; // Retorna o resultado da inserção
+            // CORREÇÃO: Adicionados 4 pontos de interrogação para os 4 campos
+            const sql = "INSERT INTO cliente (nomeCliente, cpfCliente, emailCliente, senhaCliente) VALUES (?, ?, ?, ?)";
+            const values = [nomeCliente, cpfCliente, emailCliente, senhaCliente];
+            
+            const [result] = await pool.query(sql, values);
+            return result;
         } catch (error) {
             console.error("Erro no model ao criar cliente:", error);
             throw error;
         }
     },
     
-    // Busca um cliente pelo CPF
-     
+    /**
+     * Busca um cliente pelo CPF
+     */
     buscarPorCpf: async (cpf) => {
         try {
-            const sql =  `SELECT * FROM cliente WHERE cpfCliente = ${cpf}`;
-            // [cpf] é um array com os valores para os '?'
-            const [rows] = await conexao.query(sql, [cpf]);
-            return rows; // Retorna uma lista (vazia ou com 1 cliente)
+            const pool = await getConnection();
+            // CORREÇÃO: Uso de ? para evitar SQL Injection
+            const sql = "SELECT * FROM cliente WHERE cpfCliente = ?";
+            const [rows] = await pool.query(sql, [cpf]);
+            return rows; 
         } catch (error) { 
             console.error("Erro no model ao buscar por CPF:", error);
             throw error;
@@ -49,4 +53,4 @@ const clienteModel = {
     }
 };
 
-module.exports = clienteModel;
+module.exports = { clienteModel }; // Exportando como objeto (com chaves)

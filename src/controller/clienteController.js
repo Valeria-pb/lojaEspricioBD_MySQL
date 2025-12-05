@@ -1,50 +1,55 @@
-const clienteModel = require('../model/clienteModel'); // Importa o Model
+const { clienteModel } = require("../model/clienteModel");
+const bcrypt = require('bcrypt');
 
 const clienteController = {
-    /**
-     * Lista todos os clientes (GET)
-     */
     listarClientes: async (req, res) => {
-        try {
+        try {            
             const clientes = await clienteModel.buscarTodos();
-            res.status(200).json(clientes); // Retorna 200 OK e a lista de clientes
+            res.status(200).json(clientes);
         } catch (error) {
-            console.error("Erro no controller ao listar clientes:", error);
-            res.status(500).json({ erro: "Erro no servidor." });
+            console.error('Erro ao listar clientes:', error);
+            res.status(500).json({ error: `Erro ao buscar clientes.` });
         }
     },
 
-    /**
-     * Cria um novo cliente (POST) 
-     */
     criarCliente: async (req, res) => {
         try {
-            const { nomeCliente, cpfCliente } = req.body;
+            const { nomeCliente, cpfCliente, emailCliente, senhaCliente } = req.body;
 
-            // 1. Verifica se o CPF já existe
+            // Validação
+            if (!nomeCliente || !cpfCliente || !emailCliente || !senhaCliente) {
+                return res.status(400).json({ erro: "Todos os campos (nome, cpf, email, senha) são obrigatórios." });
+            }
+
+            // 1. Verificar se CPF existe (usando o nome correto da função do model)
             const clienteExistente = await clienteModel.buscarPorCpf(cpfCliente);
-            
+
             if (clienteExistente.length > 0) {
-                // 2. Se existe, retorna status 409 (Conflito)
-                return res.status(409).json({ erro: "CPF já cadastrado." });
+                return res.status(409).json({ erro: "CPF já cadastrado!" });
             }
             
+            // 2. Criptografia
+            const saltRounds = 10;
+            // CORREÇÃO: Criamos uma nova variável, pois não podemos alterar a const senhaCliente original
+            const senhaCriptografada = await bcrypt.hash(senhaCliente, saltRounds);
 
-            // 3. Se não existe, prossegue com a criação
-            const novoCliente = { nomeCliente, cpfCliente };
-            const result = await clienteModel.criarCliente(novoCliente);
+            // 3. Objeto para enviar ao model
+            const novoCliente = {
+                nomeCliente, 
+                cpfCliente,  
+                emailCliente, 
+                senhaCliente: senhaCriptografada // Manda a senha hash
+            };
 
-            // 4. Retorna 201 Created
-            res.status(201).json({ 
-                message: "Cliente criado com sucesso!",
-                idCliente: result.insertId // Retorna o ID do novo cliente
-            });
+            // 4. Inserir (usando o nome correto da função do model)
+            await clienteModel.criarCliente(novoCliente);
 
+            res.status(201).json({ message: "Cliente cadastrado com sucesso!" });
         } catch (error) {
-            console.error("Erro no controller ao criar cliente:", error);
-            res.status(500).json({ erro: "Erro no servidor." });
+            console.error('Erro ao cadastrar cliente:', error);
+            res.status(500).json({ error: `Erro ao cadastrar cliente.` });
         }
     }
 };
 
-module.exports = clienteController;
+module.exports = { clienteController };

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Importa o controller 
-const clienteController = require('../controller/clienteController');
+const {clienteController} = require('../controller/clienteController');
 
 // Define as rotas
 // GET /clientes -> Chama a função listarClientes
