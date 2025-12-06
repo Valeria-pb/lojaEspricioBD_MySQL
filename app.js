@@ -1,6 +1,13 @@
 const express = require('express');
 const app = express();
-const port = 3000; 
+require('dotenv').config();
+const PORT = process.env.PORT;
+
+
+
+
+//alt+seta move linhas
+//shit+alt+f = organiza cod.
 
 // --- Configurações Essenciais ---
 // 1. Diz ao Express para entender requisições com corpo em JSON
@@ -23,8 +30,8 @@ app.use('/', clienteRoutes);
 
 // --- Iniciar o Servidor ---
 // 4. "Liga" o servidor na porta definida
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
     
 });
 

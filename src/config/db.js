@@ -2,10 +2,10 @@ const mysql = require ('mysql2/promise');// importação da biblioteca mysql2
 
 //configurações de conexão
 const config ={
-    host: "localhost",
-    user: "root",
-    password: "",//senha padrão do XAMPP é vazia
-    database: "lojaEspricio",
+    host: process.env.SERVER_DB,
+    user: process.env.USER_DB,
+    password: process.env.PASSWORD_DB,
+    database: process.env.NAME_DB,
     port: 3306,//porta padrão do MySQL
     waitForConnections: true,
     connectionLimit: 10,
