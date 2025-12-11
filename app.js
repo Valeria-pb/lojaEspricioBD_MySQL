@@ -3,9 +3,11 @@ const app = express();
 require('dotenv').config();
 const PORT = process.env.PORT;
 
+const cookieParser = require("cookie-parser");
 
 
 
+app.use(cookieParser());
 //alt+seta move linhas
 //shit+alt+f = organiza cod.
 

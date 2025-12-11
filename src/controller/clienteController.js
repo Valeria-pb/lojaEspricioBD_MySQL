@@ -1,3 +1,4 @@
+
 const { clienteModel } = require("../model/clienteModel");
 const bcrypt = require('bcrypt');
 
@@ -12,6 +13,7 @@ const clienteController = {
         }
     },
 
+    
     criarCliente: async (req, res) => {
         try {
             const { nomeCliente, cpfCliente, emailCliente, senhaCliente } = req.body;

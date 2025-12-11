@@ -3,12 +3,15 @@ const router = express.Router();
 
 // Importa o controller 
 const {clienteController} = require('../controller/clienteController');
+const {authController}= require("../controller/authController");
+const {verify} = require("../middleware/authMiddleware");
 
 // Define as rotas
-// GET /clientes -> Chama a função listarClientes
-router.get('/clientes', clienteController.listarClientes);
 
-// POST /clientes -> Chama a função criarCliente
+router.post("/clientes/login", authController.clienteLogin);
+
+router.get('/clientes', verify.cliente, clienteController.listarClientes);
+
 router.post('/clientes', clienteController.criarCliente);
 
 // Exporta o router para o app.js poder usá-lo

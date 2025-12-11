@@ -1,10 +1,7 @@
 
-const { getConnection } = require('../config/db'); // Importação correta da função
+const { getConnection } = require('../config/db');
 
 const clienteModel = {
-    /**
-     * Busca todos os clientes
-     */
     buscarTodos: async () => {
         try {
             const pool = await getConnection();
@@ -16,18 +13,12 @@ const clienteModel = {
         }
     },
 
-    /**
-     * Cria um novo cliente
-     */
     criarCliente: async (cliente) => {
         try {
             const pool = await getConnection();
             const { nomeCliente, cpfCliente, emailCliente, senhaCliente } = cliente;
-            
-            // CORREÇÃO: Adicionados 4 pontos de interrogação para os 4 campos
             const sql = "INSERT INTO cliente (nomeCliente, cpfCliente, emailCliente, senhaCliente) VALUES (?, ?, ?, ?)";
             const values = [nomeCliente, cpfCliente, emailCliente, senhaCliente];
-            
             const [result] = await pool.query(sql, values);
             return result;
         } catch (error) {
@@ -36,13 +27,9 @@ const clienteModel = {
         }
     },
     
-    /**
-     * Busca um cliente pelo CPF
-     */
     buscarPorCpf: async (cpf) => {
         try {
             const pool = await getConnection();
-            // CORREÇÃO: Uso de ? para evitar SQL Injection
             const sql = "SELECT * FROM cliente WHERE cpfCliente = ?";
             const [rows] = await pool.query(sql, [cpf]);
             return rows; 
@@ -50,7 +37,22 @@ const clienteModel = {
             console.error("Erro no model ao buscar por CPF:", error);
             throw error;
         }
+    },
+
+    // AQUI ESTÁ A FUNÇÃO QUE FALTAVA PARA O LOGIN FUNCIONAR
+    buscarEmailOrCPF: async(cpfCliente, emailCliente) => {
+        try {
+            const pool = await getConnection();
+            // Verifica se existe o CPF OU o Email
+            let querySQL = "SELECT * FROM cliente WHERE cpfCliente = ? OR emailCliente = ?";
+            const [rows] = await pool.query(querySQL, [cpfCliente, emailCliente]);
+            return rows;
+
+        } catch (error) {
+            console.error("Erro ao buscar cliente por Email/CPF", error);
+            throw error;
+        }
     }
 };
 
-module.exports = { clienteModel }; // Exportando como objeto (com chaves)
+module.exports = { clienteModel };
