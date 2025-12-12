@@ -6,7 +6,7 @@ const config ={
     user: process.env.USER_DB,
     password: process.env.PASSWORD_DB,
     database: process.env.NAME_DB,
-    port: 3306,//porta padrão do MySQL
+    port:process.env.PORT_DB,//porta padrão do MySQL
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit : 0
