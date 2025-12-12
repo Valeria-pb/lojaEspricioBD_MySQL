@@ -49,4 +49,12 @@ async function getConnection(){
     }
    
 };
+
+(async () => {
+    const pool = await getConnection();
+
+    if (pool) {
+        console.log("Conexão com o BD estabelecida com sucesso!");
+    }
+})();
 module.exports ={getConnection}; // exportando a função
