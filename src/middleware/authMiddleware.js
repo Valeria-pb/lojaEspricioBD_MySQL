@@ -4,6 +4,7 @@ const verify = {
     cliente: async(req, res, next) =>{
         try {
             const {token} = req.cookies;
+            console.log(req.cookies);
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
             
