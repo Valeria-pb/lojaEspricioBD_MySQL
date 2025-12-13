@@ -31,7 +31,7 @@ const authController={
         });
             res.cookie("token", token,{
                 httpOnly: true, 
-                secure: true,
+                secure: false,
                 sameSite: "strict",
                 maxAge: Number(process.env.JWT_TIME_EXPIRES_IN)//esse serve como conf. para o cliente, entender mais depois
 
